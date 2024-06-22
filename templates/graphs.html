@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Information Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@2.0.2/build/global/luxon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@2.0.0"></script>
+</head>
+<body>
+    <h1>System Information Dashboard</h1>
+    <div>
+        <label for="update-interval">Update Interval:</label>
+        <select id="update-interval">
+            <option value="5000">5 seconds</option>
+            <option value="10000">10 seconds</option>
+            <option value="15000">15 seconds</option>
+            <option value="30000">30 seconds</option>
+            <option value="60000">1 minute</option>
+        </select>
+    </div>
+    <div class="dashboard">
+        <div class="chart-container">
+            <canvas id="cpuChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="ramChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="diskChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="networkChart"></canvas>
+        </div>
+    </div>
+    <div class="info-container">
+        <h2>System Information</h2>
+        <table id="infoTable">
+            <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>IP Address</td>
+                <td id="ip_address"></td>
+            </tr>
+            <tr>
+                <td>Disk Space Total</td>
+                <td id="disk_total"></td>
+            </tr>
+            <tr>
+                <td>Disk Space Used</td>
+                <td id="disk_used"></td>
+            </tr>
+            <tr>
+                <td>Disk Space Free</td>
+                <td id="disk_free"></td>
+            </tr>
+            <tr>
+                <td>Disk Space Percent</td>
+                <td id="disk_percent"></td>
+            </tr>
+            <tr>
+                <td>CPU Count</td>
+                <td id="cpu_count"></td>
+            </tr>
+            <tr>
+                <td>RAM Total</td>
+                <td id="ram_total"></td>
+            </tr>
+            <tr>
+                <td>RAM Available</td>
+                <td id="ram_available"></td>
+            </tr>
+            <tr>
+                <td>RAM Used</td>
+                <td id="ram_used"></td>
+            </tr>
+            <tr>
+                <td>RAM Free</td>
+                <td id="ram_free"></td>
+            </tr>
+            <tr>
+                <td>RAM Percent</td>
+                <td id="ram_percent"></td>
+            </tr>
+            <tr>
+                <td>Network Bytes Sent</td>
+                <td id="net_sent"></td>
+            </tr>
+            <tr>
+                <td>Network Bytes Received</td>
+                <td id="net_recv"></td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        var cpuChartCtx = document.getElementById('cpuChart').getContext('2d');
+        var ramChartCtx = document.getElementById('ramChart').getContext('2d');
+        var diskChartCtx = document.getElementById('diskChart').getContext('2d');
+        var networkChartCtx = document.getElementById('networkChart').getContext('2d');
+
+        var updateInterval = 5000;
+        let intervalId;
+
+        const cpuChart = new Chart(cpuChartCtx, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'CPU Usage (%)',
+                    data: [],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'realtime',
+                        realtime: {
+                            delay: updateInterval,
+                            refresh: updateInterval,
+                            onRefresh: function(chart) {
+                                fetch('/graph_data')
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        chart.data.datasets[0].data.push({
+                                            x: Date.now(),
+                                            y: data.cpu_percent
+                                        });
+                                        chart.update();
+                                    });
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const ramChart = new Chart(ramChartCtx, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'RAM Usage (%)',
+                    data: [],
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'realtime',
+                        realtime: {
+                            delay: updateInterval,
+                            refresh: updateInterval,
+                            onRefresh: function(chart) {
+                                fetch('/graph_data')
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        chart.data.datasets[0].data.push({
+                                            x: Date.now(),
+                                            y: data.ram_percent
+                                        });
+                                        chart.update();
+                                    });
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const diskChart = new Chart(diskChartCtx, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'Disk Usage (%)',
+                    data: [],
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'realtime',
+                        realtime: {
+                            delay: updateInterval,
+                            refresh: updateInterval,
+                            onRefresh: function(chart) {
+                                fetch('/graph_data')
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        chart.data.datasets[0].data.push({
+                                            x: Date.now(),
+                                            y: data.disk_percent
+                                        });
+                                        chart.update();
+                                    });
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const networkChart = new Chart(networkChartCtx, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'Network Sent (bytes)',
+                    data: [],
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Network Received (bytes)',
+                    data: [],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'realtime',
+                        realtime: {
+                            delay: updateInterval,
+                            refresh: updateInterval,
+                            onRefresh: function(chart) {
+                                fetch('/graph_data')
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        chart.data.datasets[0].data.push({
+                                            x: Date.now(),
+                                            y: data.net_sent
+                                        });
+                                        chart.data.datasets[1].data.push({
+                                            x: Date.now(),
+                                            y: data.net_recv
+                                        });
+                                        chart.update();
+                                    });
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        function updateTable() {
+            fetch('/system_info')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('ip_address').innerText = data.ip_address;
+                    document.getElementById('disk_total').innerText = data.disk_space.total;
+                    document.getElementById('disk_used').innerText = data.disk_space.used;
+                    document.getElementById('disk_free').innerText = data.disk_space.free;
+                    document.getElementById('disk_percent').innerText = data.disk_space.percent + '%';
+                    document.getElementById('cpu_count').innerText = data.cpu_info.count;
+                    document.getElementById('ram_total').innerText = data.ram_info.total;
+                    document.getElementById('ram_available').innerText = data.ram_info.available;
+                    document.getElementById('ram_used').innerText = data.ram_info.used;
+                    document.getElementById('ram_free').innerText = data.ram_info.free;
+                    document.getElementById('ram_percent').innerText = data.ram_info.percent + '%';
+                    document.getElementById('net_sent').innerText = data.network_info.bytes_sent;
+                    document.getElementById('net_recv').innerText = data.network_info.bytes_recv;
+                });
+        }
+
+        function updateIntervalHandler() {
+            updateInterval = parseInt(document.getElementById('update-interval').value);
+            clearInterval(intervalId);
+            intervalId = setInterval(() => {
+                updateTable();
+                cpuChart.options.scales.x.realtime.delay = updateInterval;
+                ramChart.options.scales.x.realtime.delay = updateInterval;
+                diskChart.options.scales.x.realtime.delay = updateInterval;
+                networkChart.options.scales.x.realtime.delay = updateInterval;
+                cpuChart.update();
+                ramChart.update();
+                diskChart.update();
+                networkChart.update();
+            }, updateInterval);
+        }
+
+        document.getElementById('update-interval').addEventListener('change', updateIntervalHandler);
+
+        // Initial table update
+        updateTable();
+        intervalId = setInterval(() => {
+            updateTable();
+            cpuChart.options.scales.x.realtime.delay = updateInterval;
+            ramChart.options.scales.x.realtime.delay = updateInterval;
+            diskChart.options.scales.x.realtime.delay = updateInterval;
+            networkChart.options.scales.x.realtime.delay = updateInterval;
+            cpuChart.update();
+            ramChart.update();
+            diskChart.update();
+            networkChart.update();
+        }, updateInterval);
+    </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Information</title>
+</head>
+<body>
+    <h1>System Information</h1>
+    <ul>
+        <li><strong>IP Address:</strong> {{ info.ip_address }}</li>
+        <li><strong>Disk Space:</strong>
+            <ul>
+                <li>Total: {{ info.disk_space.total }}</li>
+                <li>Used: {{ info.disk_space.used }}</li>
+                <li>Free: {{ info.disk_space.free }}</li>
+                <li>Percent: {{ info.disk_space.percent }}%</li>
+            </ul>
+        </li>
+        <li><strong>CPU Information:</strong>
+            <ul>
+                <li>Count: {{ info.cpu_info.count }}</li>
+                <li>Usage: {{ info.cpu_info.percent }}%</li>
+            </ul>
+        </li>
+        <li><strong>RAM Information:</strong>
+            <ul>
+                <li>Total: {{ info.ram_info.total }}</li>
+                <li>Available: {{ info.ram_info.available }}</li>
+                <li>Used: {{ info.ram_info.used }}</li>
+                <li>Free: {{ info.ram_info.free }}</li>
+                <li>Percent: {{ info.ram_info.percent }}%</li>
+            </ul>
+        </li>
+    </ul>
+</body>
+</html>
