@@ -4,34 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>System Information</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
     <h1>System Information</h1>
-    <ul>
-        <li><strong>IP Address:</strong> {{ info.ip_address }}</li>
-        <li><strong>Disk Space:</strong>
-            <ul>
-                <li>Total: {{ info.disk_space.total }}</li>
-                <li>Used: {{ info.disk_space.used }}</li>
-                <li>Free: {{ info.disk_space.free }}</li>
-                <li>Percent: {{ info.disk_space.percent }}%</li>
-            </ul>
-        </li>
-        <li><strong>CPU Information:</strong>
-            <ul>
-                <li>Count: {{ info.cpu_info.count }}</li>
-                <li>Usage: {{ info.cpu_info.percent }}%</li>
-            </ul>
-        </li>
-        <li><strong>RAM Information:</strong>
-            <ul>
-                <li>Total: {{ info.ram_info.total }}</li>
-                <li>Available: {{ info.ram_info.available }}</li>
-                <li>Used: {{ info.ram_info.used }}</li>
-                <li>Free: {{ info.ram_info.free }}</li>
-                <li>Percent: {{ info.ram_info.percent }}%</li>
-            </ul>
-        </li>
-    </ul>
+    <div class="info-container">
+        <h2>System Information</h2>
+        <table id="infoTable">
+            <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>IP Address</td>
+                <td id="ip_address">{{ info.ip_address }}</td>
+            </tr>
+            <tr>
+                <td>Disk Space Total</td>
+                <td id="disk_total">{{ info.disk_space.total }}</td>
+            </tr>
+            <tr>
+                <td>Disk Space Used</td>
+                <td id="disk_used">{{ info.disk_space.used }}</td>
+            </tr>
+            <tr>
+                <td>Disk Space Free</td>
+                <td id="disk_free">{{ info.disk_space.free }}</td>
+            </tr>
+            <tr>
+                <td>Disk Space Percent</td>
+                <td id="disk_percent">{{ info.disk_space.percent }}%</td>
+            </tr>
+            <tr>
+                <td>CPU Count</td>
+                <td id="cpu_count">{{ info.cpu_info.count }}</td>
+            </tr>
+            <tr>
+                <td>RAM Total</td>
+                <td id="ram_total">{{ info.ram_info.total }}</td>
+            </tr>
+            <tr>
+                <td>RAM Available</td>
+                <td id="ram_available">{{ info.ram_info.available }}</td>
+            </tr>
+            <tr>
+                <td>RAM Used</td>
+                <td id="ram_used">{{ info.ram_info.used }}</td>
+            </tr>
+            <tr>
+                <td>RAM Free</td>
+                <td id="ram_free">{{ info.ram_info.free }}</td>
+            </tr>
+            <tr>
+                <td>RAM Percent</td>
+                <td id="ram_percent">{{ info.ram_info.percent }}%</td>
+            </tr>
+            <tr>
+                <td>Network Bytes Sent</td>
+                <td id="net_sent">{{ info.network_info.bytes_sent }}</td>
+            </tr>
+            <tr>
+                <td>Network Bytes Received</td>
+                <td id="net_recv">{{ info.network_info.bytes_recv }}</td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <a href="{{ url_for('graphs') }}">View Graphs</a>
+    </div>
 </body>
 </html>

@@ -45,55 +45,55 @@
             </tr>
             <tr>
                 <td>IP Address</td>
-                <td id="ip_address"></td>
+                <td id="ip_address">{{ info.ip_address }}</td>
             </tr>
             <tr>
                 <td>Disk Space Total</td>
-                <td id="disk_total"></td>
+                <td id="disk_total">{{ info.disk_space.total }}</td>
             </tr>
             <tr>
                 <td>Disk Space Used</td>
-                <td id="disk_used"></td>
+                <td id="disk_used">{{ info.disk_space.used }}</td>
             </tr>
             <tr>
                 <td>Disk Space Free</td>
-                <td id="disk_free"></td>
+                <td id="disk_free">{{ info.disk_space.free }}</td>
             </tr>
             <tr>
                 <td>Disk Space Percent</td>
-                <td id="disk_percent"></td>
+                <td id="disk_percent">{{ info.disk_space.percent }}%</td>
             </tr>
             <tr>
                 <td>CPU Count</td>
-                <td id="cpu_count"></td>
+                <td id="cpu_count">{{ info.cpu_info.count }}</td>
             </tr>
             <tr>
                 <td>RAM Total</td>
-                <td id="ram_total"></td>
+                <td id="ram_total">{{ info.ram_info.total }}</td>
             </tr>
             <tr>
                 <td>RAM Available</td>
-                <td id="ram_available"></td>
+                <td id="ram_available">{{ info.ram_info.available }}</td>
             </tr>
             <tr>
                 <td>RAM Used</td>
-                <td id="ram_used"></td>
+                <td id="ram_used">{{ info.ram_info.used }}</td>
             </tr>
             <tr>
                 <td>RAM Free</td>
-                <td id="ram_free"></td>
+                <td id="ram_free">{{ info.ram_info.free }}</td>
             </tr>
             <tr>
                 <td>RAM Percent</td>
-                <td id="ram_percent"></td>
+                <td id="ram_percent">{{ info.ram_info.percent }}%</td>
             </tr>
             <tr>
                 <td>Network Bytes Sent</td>
-                <td id="net_sent"></td>
+                <td id="net_sent">{{ info.network_info.bytes_sent }}</td>
             </tr>
             <tr>
                 <td>Network Bytes Received</td>
-                <td id="net_recv"></td>
+                <td id="net_recv">{{ info.network_info.bytes_recv }}</td>
             </tr>
         </table>
     </div>

@@ -12,7 +12,7 @@ def get_ip_address():
 
 def format_bytes(size):
     # Convert bytes to human-readable format
-    for unit in ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']:
+    for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
         if size < 1024:
             return f"{size:.2f} {unit}"
         size /= 1024
@@ -61,11 +61,25 @@ def system_info():
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    info = {
+        'ip_address': get_ip_address(),
+        'disk_space': get_disk_space(),
+        'cpu_info': get_cpu_info(),
+        'ram_info': get_ram_info(),
+        'network_info': get_network_info()
+    }
+    return render_template('index.html', info=info)
 
 @app.route('/graphs')
 def graphs():
-    return render_template('graphs.html')
+    info = {
+        'ip_address': get_ip_address(),
+        'disk_space': get_disk_space(),
+        'cpu_info': get_cpu_info(),
+        'ram_info': get_ram_info(),
+        'network_info': get_network_info()
+    }
+    return render_template('graphs.html', info=info)
 
 @app.route('/graph_data', methods=['GET'])
 def graph_data():
